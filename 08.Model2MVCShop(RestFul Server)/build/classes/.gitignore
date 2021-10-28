@@ -1,3 +1,5 @@
-/context.properties
-/config/
 /com/
+/config/
+/context.properties
+/log4j.properties
+/sql/

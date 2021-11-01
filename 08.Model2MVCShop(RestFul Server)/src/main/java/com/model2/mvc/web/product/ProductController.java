@@ -74,7 +74,7 @@ public class ProductController {
 
 		System.out.println("/product/getProduct : GET");
 		
-		/////////////////////// Cookie part ///////////////////////////////
+		/*/////////////////////// Cookie part ///////////////////////////////
 		String history = "";
 
 		Cookie[] cookies = request.getCookies();
@@ -100,13 +100,13 @@ public class ProductController {
 
 		response.addCookie(cookie);
 		
-		/////////////////////// Cookie part ////////////////////////////
+		/////////////////////// Cookie part ////////////////////////////*/
 		//Business Logic
 		Product product = productService.getProduct(prodNo);
 
 		model.addAttribute("product", product);
 
-		request.setAttribute("product", product);
+		//request.setAttribute("product", product);
 
 		System.out.println(":: getProduct Method에서 불러온 menu :: " + request.getParameter("menu"));
 

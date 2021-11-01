@@ -96,7 +96,7 @@ public class UserRestController {
 	}
 	
 	@RequestMapping( value="/json/listUser", method=RequestMethod.POST  )
-	public Map listUser( @ModelAttribute("search") Search search ,User user, Model model , HttpServletRequest request) throws Exception{
+	public Map listUser( @ModelAttribute("search") Search search ,User user, HttpServletRequest request) throws Exception{
 		
 		System.out.println("/user/listUser : GET / POST");
 		
@@ -109,14 +109,22 @@ public class UserRestController {
 		
 		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
 		
-		System.out.println(resultPage);
+		System.out.println("resultPage :: "+resultPage);
 		
-		model.addAttribute("list", map.get("list"));
-		model.addAttribute("resultPage", resultPage);
-		model.addAttribute("search", search);
-		
+		//list, totalCount
 		return map;
 
+	}
+	
+	@RequestMapping( value="/json/addUser/{userId}", method=RequestMethod.POST )
+	public User addUser( @RequestBody User user, Search search) throws Exception {
+
+		System.out.println("/user/addUser : POST");
+		//Business Logic
+		
+		userService.addUser(user);
+		
+		return user;
 	}
 	
 }

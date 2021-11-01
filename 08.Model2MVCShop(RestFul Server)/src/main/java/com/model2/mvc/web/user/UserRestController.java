@@ -36,6 +36,12 @@ public class UserRestController {
 	public UserRestController() {
 		System.out.println(this.getClass());
 	}
+	
+	@Value("#{commonProperties['pageUnit']}")
+	int pageUnit;
+	@Value("#{commonProperties['pageSize']}")
+	int pageSize;
+
 
 	@RequestMapping(value = "json/getUser/{userId}", method = RequestMethod.GET)
 	public User getUser(@PathVariable String userId) throws Exception {
@@ -74,7 +80,7 @@ public class UserRestController {
 		return user;
 	}
 	
-	@RequestMapping(value="json/updateUser//{userId}", method=RequestMethod.POST)
+	@RequestMapping(value="json/updateUser/{userId}", method=RequestMethod.POST)
 	public User updateUser(@ModelAttribute("user") User user, Model model, HttpSession session) throws Exception{
 		
 		System.out.println("/user/updateUser : POST");
@@ -85,6 +91,38 @@ public class UserRestController {
 		if(sessionId.equals(user.getUserId())){
 			session.setAttribute("user", user);
 		}
+		
+		return user;
+	}
+	
+	@RequestMapping( value="/json/listUser", method=RequestMethod.POST  )
+	public Map listUser( @ModelAttribute("search") Search search ,User user, HttpServletRequest request) throws Exception{
+		
+		System.out.println("/user/listUser : GET / POST");
+		
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		
+		Map<String , Object> map=userService.getUserList(search);
+		
+		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
+		
+		System.out.println("resultPage :: "+resultPage);
+		
+		//list, totalCount
+		return map;
+
+	}
+	
+	@RequestMapping( value="/json/addUser/{userId}", method=RequestMethod.POST )
+	public User addUser( @RequestBody User user, Search search) throws Exception {
+
+		System.out.println("/user/addUser : POST");
+		//Business Logic
+		
+		userService.addUser(user);
 		
 		return user;
 	}
